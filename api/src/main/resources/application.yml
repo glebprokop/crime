@@ -1,0 +1,53 @@
+spring:
+  main:
+    allow-circular-references: true
+
+  datasource:
+
+    hikari:
+      jdbc-url: &url >-
+        jdbc:postgresql://localhost:5432/crime_db?useUnicode=true&
+        useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      maximum-pool-size: 20
+      driver-class-name: &driver org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: *url
+    driver-class-name: *driver
+
+#  jpa:
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+#        format_sql: true
+
+#  flyway:
+#    enabled: true
+#    baseline-on-migrate: true
+#    baseline-description: Flyway Scripts
+#    #    locations: classpath:/db
+#    user: ${spring.datasource.username}
+#    password: ${spring.datasource.password}
+#    url: ${spring.datasource.url}
+#    default-schema: public
+#    out-of-order: true
+#    ignore-migration-patterns: '*:ignored'
+
+
+security:
+  web:
+    private-matchers:
+      USER: /api/v1/**, /api/v2/**
+      ADMIN: /api/v1/**
+
+    login-page: /login
+    logout-page: /logout
+
+  token:
+    secret: secret
+    expiration: 60000000
+    headers:
+      typ: JWT
+      alg: HS512
+    request-header-authorization: Authorization
