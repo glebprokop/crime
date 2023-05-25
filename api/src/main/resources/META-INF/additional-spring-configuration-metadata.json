@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "security.web.login-page",
+      "type": "java.lang.String",
+      "description": "Description for security.web.login-page."
+  }
+] }

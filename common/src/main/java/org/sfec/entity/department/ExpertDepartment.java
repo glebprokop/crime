@@ -1,7 +1,6 @@
-package org.sfec.entity;
+package org.sfec.entity.department;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,21 +12,27 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import org.sfec.entity.BaseEntity;
+import org.sfec.entity.expert.Expert;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Builder
+@SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(
+        callSuper = false,
+        exclude = {"experts"})
+@ToString
 @Entity
 @Table(name = "m_expert_department")
-public class ExpertDepartment extends BaseEntity{
+public class ExpertDepartment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
@@ -36,7 +41,7 @@ public class ExpertDepartment extends BaseEntity{
             sequenceName = "m_expert_department_expert_department_id_seq",
             allocationSize = 1)
     @Column(name = "expert_department_id")
-    private Long expertId;
+    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -45,9 +50,8 @@ public class ExpertDepartment extends BaseEntity{
     private String description;
 
     @OneToMany(mappedBy = "expertDepartment",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
-            orphanRemoval = false)
+            cascade = CascadeType.PERSIST,
+            fetch = FetchType.EAGER)
     @JsonBackReference
-    private List<Expert> experts;
+    private Set<Expert> experts;
 }

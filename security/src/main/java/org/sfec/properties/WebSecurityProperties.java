@@ -1,5 +1,6 @@
 package org.sfec.properties;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -17,11 +19,16 @@ import java.util.Map;
 @AllArgsConstructor
 public class WebSecurityProperties {
 
-    private Map<String, String[]> privateMatchers;
+    @NotNull
+    private Map<String, String[]> privateMatchers = new HashMap<>();
 
-    //private Map<String, String[]> publicMatchers;
+    private String[] publicMatchers = {};
 
-    private String loginPage;
+    private String loginPage = "";
 
-    private String logoutPage;
+    private String logoutPage = "";
+
+    private Boolean csrf = false;
+
+    private String sessionCreationPolicy = "STATELESS";
 }

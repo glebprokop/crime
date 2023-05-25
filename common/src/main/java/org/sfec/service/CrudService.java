@@ -1,25 +1,38 @@
 package org.sfec.service;
 
+import jakarta.validation.Valid;
+import org.sfec.entity.common.EntityStatus;
+import org.sfec.exception.EntityNotFoundException;
+import org.springframework.validation.annotation.Validated;
+
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Parametrised interface used to describe the all CRUD operations on the org.sfec.common.service` layer.
+ * Parametrised interface used to describe the all CRUD operations on
+ * the service layer.
  * All services in application need to implement this interface.
  *
- * @param <T> the org.sfec.common.entity class parameter
+ * @param <T> the entity class parameter
  */
+@Validated
 public interface CrudService<T>{
 
     List<T> findAll();
 
-    Optional<T> findById(Long id);
+    List<T> findAllByEntityStatus(@Valid EntityStatus entityStatus);
 
-    T findOne(Long id);
+    Optional<T> findById(@Valid Long id);
 
-    void delete(Long id);
+    T findOne(@Valid Long id);
 
-    T create(T t);
+    void hardDelete(@Valid Long id);
 
-    T update(T t);
+    void softDelete(@Valid Long id);
+
+    T create(@Valid T t);
+
+    T update(@Valid T t);
+
+    Boolean existById(@Valid Long id) throws EntityNotFoundException;
 }

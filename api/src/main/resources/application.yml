@@ -35,14 +35,18 @@ spring:
 #    ignore-migration-patterns: '*:ignored'
 
 
+
 security:
   web:
     private-matchers:
-      USER: /api/v1/**, /api/v2/**
-      ADMIN: /api/v1/**
+      /api/v1/experts/**: ADMIN
+      /api/v1/addresses/**: USER, ADMIN
+
+    public-matchers: /api/auth/login
 
     login-page: /login
     logout-page: /logout
+    session-creation-policy: STATELESS
 
   token:
     secret: secret

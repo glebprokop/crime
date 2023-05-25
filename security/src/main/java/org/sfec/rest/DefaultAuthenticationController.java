@@ -1,17 +1,13 @@
 package org.sfec.rest;
 
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.sfec.jwt.JwtTokenProvider;
 import org.sfec.user.JwtUser;
 import org.sfec.util.SecurityService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,13 +35,13 @@ public class DefaultAuthenticationController {
         this.service = service;
     }
 
-    @PostMapping("login")
-    public ResponseEntity login(@RequestBody DefaultRequestDto requestDto) {
+    @PostMapping("/login")
+    public ResponseEntity login(@Valid @RequestBody DefaultRequestDto requestDto) {
         try {
             String username = requestDto.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
-            JwtUser user = service.findJwtUserByName(username);
 
+            JwtUser user = service.findJwtUserByName(username);
             if (user == null) {
                 throw new UsernameNotFoundException("User with username: " + username + " not found");
             }

@@ -7,14 +7,19 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.sfec.entity.common.EntityStatus;
 
 import java.sql.Timestamp;
 
 @MappedSuperclass
 @Data
+@SuperBuilder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class BaseEntity {
 
     @Column(name = "created")
@@ -25,5 +30,29 @@ public class BaseEntity {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status")
-    private EntityStatus status;
+    private EntityStatus entityStatus;
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
+    public Timestamp getChanged() {
+        return changed;
+    }
+
+    public void setChanged(Timestamp changed) {
+        this.changed = changed;
+    }
+
+    public EntityStatus getEntityStatus() {
+        return entityStatus;
+    }
+
+    public void setEntityStatus(EntityStatus entityStatus) {
+        this.entityStatus = entityStatus;
+    }
 }

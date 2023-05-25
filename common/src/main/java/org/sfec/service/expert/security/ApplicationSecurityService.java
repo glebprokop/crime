@@ -1,7 +1,7 @@
-package org.sfec.service.security;
+package org.sfec.service.expert.security;
 
-import org.sfec.entity.EntityStatus;
-import org.sfec.entity.Expert;
+import org.sfec.entity.common.EntityStatus;
+import org.sfec.entity.expert.Expert;
 import org.sfec.repository.expert.ExpertRepository;
 import org.sfec.user.JwtUser;
 import org.sfec.util.SecurityService;
@@ -11,11 +11,16 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class add functionality for the correct security work, used for connection to
+ * datasource and getting info about {@link Expert} object and convert it into
+ * the {@link JwtUser} object, which is the image of user in security module
+ */
 @Service
 @Primary
 public class ApplicationSecurityService implements SecurityService<Expert> {
 
-    ExpertRepository expertRepository;
+    private final ExpertRepository expertRepository;
 
     public ApplicationSecurityService(ExpertRepository expertRepository) {
         this.expertRepository = expertRepository;
@@ -36,7 +41,7 @@ public class ApplicationSecurityService implements SecurityService<Expert> {
         JwtUser jwtUser = JwtUser.builder()
                 .username(expert.getUsername())
                 .password(expert.getPassword())
-                .enabled(expert.getStatus().equals(EntityStatus.ENABLE))
+                .enabled(expert.getEntityStatus().equals(EntityStatus.ENABLE))
                 .authorities(this.generateAuthorities(roles))
                 .build();
 
@@ -45,10 +50,7 @@ public class ApplicationSecurityService implements SecurityService<Expert> {
 
     @Override
     public Expert doApplicationUser(JwtUser jwtUser) {
-        Expert expert = Expert.builder()
-                .username(jwtUser.getUsername())
-                .password(jwtUser.getPassword())
-                .build();
+        Expert expert = expertRepository.findByUsername(jwtUser.getUsername());
 
         return expert;
     }

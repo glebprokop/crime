@@ -1,4 +1,4 @@
-package org.sfec.entity;
+package org.sfec.entity.role;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
@@ -16,16 +16,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.sfec.entity.BaseEntity;
+import org.sfec.entity.expert.Expert;
+
 import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Builder
+@SuperBuilder
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "m_expert_role")
-public class ExpertRole extends BaseEntity{
+public class ExpertRole extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
@@ -34,15 +38,14 @@ public class ExpertRole extends BaseEntity{
             sequenceName = "m_expert_role_expert_role_id_seq",
             allocationSize = 1)
     @Column(name = "expert_role_id")
-    private Long expertRoleId;
+    private Long id;
 
     @Column(name = "role_name")
     private String roleName;
 
     @OneToMany(mappedBy = "expertRole",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
-            orphanRemoval = false)
+            fetch = FetchType.EAGER)
     @JsonBackReference
     private List<Expert> experts;
 }

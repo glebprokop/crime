@@ -11,11 +11,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableWebMvc
 @Import({CommonModuleConfiguration.class})
-
 public class TestStartApi {
     public static void main(String[] args) {
         SpringApplication.run(TestStartApi.class, args);
-
-
     }
 }
