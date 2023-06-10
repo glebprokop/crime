@@ -1,18 +1,17 @@
 package org.sfec.entity.crime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +19,10 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.sfec.entity.BaseEntity;
 import org.sfec.entity.address.Address;
+import org.sfec.entity.fingerprint.Fingerprint;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Entity class for description addresses of crimes.
@@ -66,6 +65,15 @@ public class Crime extends BaseEntity {
     @Column(name = "crime_status")
     private String crimeStatus;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "crime")
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "crime",
+            cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Address> addresses;
+
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "crime",
+            cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<Fingerprint> fingerprints;
 }

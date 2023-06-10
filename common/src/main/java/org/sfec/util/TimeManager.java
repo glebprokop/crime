@@ -11,16 +11,16 @@ import java.util.Date;
 @Component
 public class TimeManager {
 
+    public static Timestamp currentTimeTwo() {
+        return new Timestamp(new Date().getTime());
+    }
+
     /**
      * Generate current time using the default {@link Date} constructor
      *
      * @return {@link Timestamp} object contains current time of server
      */
-    public Timestamp currentTime(){
-        return new Timestamp(new Date().getTime());
-    }
-
-    public static Timestamp currentTimeTwo(){
+    public Timestamp currentTime() {
         return new Timestamp(new Date().getTime());
     }
 }

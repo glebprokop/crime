@@ -1,9 +1,8 @@
+# General application properties for spring boot
 spring:
-  main:
-    allow-circular-references: true
 
+  # Properties for data source
   datasource:
-
     hikari:
       jdbc-url: &url >-
         jdbc:postgresql://localhost:5432/crime_db?useUnicode=true&
@@ -15,41 +14,68 @@ spring:
     url: *url
     driver-class-name: *driver
 
-#  jpa:
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
-#        format_sql: true
+  # Properties for JPA persistence
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        format_sql: false
 
-#  flyway:
-#    enabled: true
-#    baseline-on-migrate: true
-#    baseline-description: Flyway Scripts
-#    #    locations: classpath:/db
-#    user: ${spring.datasource.username}
-#    password: ${spring.datasource.password}
-#    url: ${spring.datasource.url}
-#    default-schema: public
-#    out-of-order: true
-#    ignore-migration-patterns: '*:ignored'
+  # Properties for flyway bd migrations
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-description: Flyway Scripts
+    locations: classpath:/migration
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    url: ${spring.datasource.url}
+    default-schema: public
+    out-of-order: true
+    ignore-migration-patterns: '*:ignored'
 
+# Swagger properties
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
 
+---
+# Properties for Caffeine cache manager
+cache:
+  caches: entities
+  initial-capacity: 30
+  max-size: 200
+  expire-in-seconds: 20
 
+---
+# Properties for image files configuration
+image:
+  size-min: 128
+  size-max: 1000000
+  folder: "D:/images"
+
+---
+# Properties for security module according the contract
 security:
   web:
     private-matchers:
-      /api/v1/experts/**: ADMIN
-      /api/v1/addresses/**: USER, ADMIN
+      USER: >-
+        /api/v1/addresses/**, /api/v1/crimes/**,  /api/v1/departments/**,
+        /api/v1/fingerprints/**, /api/v1/identities/**, /api/v1/images/**
+      ADMIN: >-
+        /api/v1/addresses/**, /api/v1/crimes/**,  /api/v1/departments/**,
+        /api/v1/fingerprints/**, /api/v1/identities/**, /api/v1/images/**,
+        /api/v1/experts/**, /api/v1/roles/**
 
-    public-matchers: /api/auth/login
+    public-matchers: >-
+      /api/auth/login, /v3/api-docs/**, /v2/api-docs/**, /configuration/ui/**, /swagger-resources/**,
+      /configuration/security/**, /swagger-ui/**, /swagger-ui/index.html, /webjars/**,
+      /swagger-ui.html#, /swagger-config/**
 
-    login-page: /login
-    logout-page: /logout
     session-creation-policy: STATELESS
-
   token:
-    secret: secret
+    secret: secretwordhaha
     expiration: 60000000
     headers:
       typ: JWT

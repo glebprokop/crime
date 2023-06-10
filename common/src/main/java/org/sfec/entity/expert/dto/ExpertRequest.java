@@ -1,5 +1,7 @@
 package org.sfec.entity.expert.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,11 +21,14 @@ import org.sfec.entity.role.dto.ExpertRoleRequest;
 @AllArgsConstructor
 public class ExpertRequest extends BaseRequestDto {
 
+    @NotBlank
     private String email;
 
-    @NotNull
+    @NotBlank
     private String username;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank
     private String password;
 
     @NotNull

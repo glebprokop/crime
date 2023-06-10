@@ -1,5 +1,6 @@
 package org.sfec.controller.identity;
 
+import jakarta.validation.Valid;
 import org.sfec.controller.CrudController;
 import org.sfec.entity.common.EntityStatus;
 import org.sfec.entity.identity.dto.IdentityRequest;
@@ -30,7 +31,7 @@ public class IdentityController implements CrudController<IdentityRequest> {
 
     @GetMapping()
     public ResponseEntity<List<IdentityRequest>> findAllByEntityStatus(
-            @RequestParam(name = "status") EntityStatus entityStatus) {
+            @Valid @RequestParam(name = "status") EntityStatus entityStatus) {
         List<IdentityRequest> objects = identityService.findAllByEntityStatus(entityStatus);
 
         return new ResponseEntity<>(objects, HttpStatus.OK);
@@ -38,7 +39,7 @@ public class IdentityController implements CrudController<IdentityRequest> {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<IdentityRequest> findOne(@PathVariable Long id) {
+    public ResponseEntity<IdentityRequest> findOne(@Valid @PathVariable Long id) {
         IdentityRequest object = identityService.findOne(id);
 
         return new ResponseEntity<>(object, HttpStatus.OK);
@@ -46,19 +47,19 @@ public class IdentityController implements CrudController<IdentityRequest> {
 
     @Override
     @DeleteMapping("/{id}")
-    public void softDelete(@PathVariable Long id) {
+    public void softDelete(@Valid @PathVariable Long id) {
         identityService.softDelete(id);
     }
 
     @Override
     @DeleteMapping("/erase/{id}")
-    public void hardDelete(@PathVariable Long id) {
+    public void hardDelete(@Valid @PathVariable Long id) {
         identityService.hardDelete(id);
     }
 
     @Override
     @PostMapping()
-    public ResponseEntity<IdentityRequest> create(@RequestBody IdentityRequest identityRequest) {
+    public ResponseEntity<IdentityRequest> create(@Valid @RequestBody IdentityRequest identityRequest) {
         IdentityRequest created = identityService.create(identityRequest);
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
@@ -66,7 +67,7 @@ public class IdentityController implements CrudController<IdentityRequest> {
 
     @Override
     @PutMapping()
-    public ResponseEntity<IdentityRequest> update(@RequestBody IdentityRequest identityRequest) {
+    public ResponseEntity<IdentityRequest> update(@Valid @RequestBody IdentityRequest identityRequest) {
         IdentityRequest updated = identityService.update(identityRequest);
 
         return new ResponseEntity<>(updated, HttpStatus.OK);

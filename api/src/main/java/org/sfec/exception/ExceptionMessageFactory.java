@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 /**
  * Simple factory for generating the custom {@link ExceptionMessage} object, used in
  * the {@link org.sfec.exception.handler.DefaultExceptionHandler} class
- *
  */
 @Component
 public class ExceptionMessageFactory {
@@ -21,10 +20,10 @@ public class ExceptionMessageFactory {
      * Factory method to generate the {@link ExceptionMessage} object
      *
      * @param code code of exception described in the {@link ExceptionCodes} class
-     * @param e {@link Throwable} object the reason of exception
+     * @param e    {@link Throwable} object the reason of exception
      * @return configured {@link ExceptionMessage} object having uniq UUID id
      */
-    public ExceptionMessage generateMessage(Throwable e, Integer code){
+    public ExceptionMessage generateMessage(Throwable e, Integer code) {
         ExceptionMessage exceptionMessage = ExceptionMessage.builder()
                 .id(uuidGenerator.generateUUID())
                 .message(e.getMessage())

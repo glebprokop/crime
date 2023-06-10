@@ -1,6 +1,5 @@
 package org.sfec.service.fingerprint;
 
-import lombok.RequiredArgsConstructor;
 import org.sfec.entity.fingerprint.Fingerprint;
 import org.sfec.entity.fingerprint.dto.FingerprintRequest;
 import org.sfec.mapper.CommonMapper;

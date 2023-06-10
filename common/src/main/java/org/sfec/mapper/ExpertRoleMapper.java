@@ -8,5 +8,5 @@ import org.sfec.entity.role.dto.ExpertRoleRequest;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE,
         componentModel = MappingConstants.ComponentModel.SPRING)
-public interface ExpertRoleMapper extends CommonMapper<ExpertRole, ExpertRoleRequest>{
+public interface ExpertRoleMapper extends CommonMapper<ExpertRole, ExpertRoleRequest> {
 }

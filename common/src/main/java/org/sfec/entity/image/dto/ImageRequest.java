@@ -1,5 +1,6 @@
 package org.sfec.entity.image.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,5 +20,8 @@ public class ImageRequest extends BaseRequestDto {
 
     private String imageName;
 
-    private FingerprintRequest fingerprintRequest;
+    private Boolean containsImage;
+
+    @NotNull
+    private FingerprintRequest fingerprint;
 }

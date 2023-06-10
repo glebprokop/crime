@@ -3,7 +3,6 @@ package org.sfec.user;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.sfec.util.SecurityService;
 import org.springframework.security.core.GrantedAuthority;

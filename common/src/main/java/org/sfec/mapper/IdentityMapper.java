@@ -8,5 +8,5 @@ import org.sfec.entity.identity.dto.IdentityRequest;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE,
         componentModel = MappingConstants.ComponentModel.SPRING)
-public interface IdentityMapper extends CommonMapper<Identity, IdentityRequest>{
+public interface IdentityMapper extends CommonMapper<Identity, IdentityRequest> {
 }

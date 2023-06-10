@@ -1,6 +1,5 @@
 package org.sfec.configuration;
 
-import org.sfec.jwt.JwtTokenFilter;
 import org.sfec.properties.WebSecurityProperties;
 import org.sfec.user.JwtUserDetailsService;
 import org.springframework.context.annotation.Bean;
@@ -9,35 +8,24 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 /**
  * Main configuration security class used for the configure the {@link SecurityFilterChain} filter chain.
  * For configuration in this class need yo use the {@link WebSecurityProperties} class, contains all security
  * properties for application.
- *
  */
 @Configuration
 public class WebSecurityConfiguration {
 
-    private WebSecurityProperties properties;
-
-    private JwtTokenFilter jwtTokenFilter;
-
-    private JwtUserDetailsService jwtUserDetailsService;
+    private final JwtUserDetailsService jwtUserDetailsService;
 
     private final WebSecurityConfigurator configurator;
 
-    public WebSecurityConfiguration(WebSecurityProperties properties,
-                                    JwtUserDetailsService jwtUserDetailsService,
-                                    JwtTokenFilter jwtTokenFilter, WebSecurityConfigurator configurator) {
-        this.properties = properties;
-        this.jwtTokenFilter = jwtTokenFilter;
+    public WebSecurityConfiguration(JwtUserDetailsService jwtUserDetailsService,
+                                    WebSecurityConfigurator configurator) {
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.configurator = configurator;
     }
@@ -49,8 +37,8 @@ public class WebSecurityConfiguration {
      * @return {@link PasswordEncoder} object
      */
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return NoOpPasswordEncoder.getInstance();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(6);
     }
 
     /**
@@ -66,15 +54,9 @@ public class WebSecurityConfiguration {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(jwtUserDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
-
         ProviderManager providerManager = new ProviderManager(provider);
 
         return providerManager;
-    }
-
-    @Bean
-    HiddenHttpMethodFilter hiddenHttpMethodFilter() {
-        return new HiddenHttpMethodFilter();
     }
 
     /**
@@ -90,39 +72,12 @@ public class WebSecurityConfiguration {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .httpBasic().disable()
-//                .csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authorizeHttpRequests()
-//                .requestMatchers("/api/auth/login").permitAll();
-
-//                .requestMatchers("/api/v1/**").hasRole("USER")
-//                .requestMatchers("").hasRole("USER")
-//                .anyRequest().authenticated();
-
-//        this.configureJwtFilter(http);
-//        http = configurator.configureLockMatchers(http);
-
-//        configurator.setHttpSecurity(http)
-//                .configureLockMatchers()
-//                .buildSecurityFilterChain();
-
         return configurator.setHttpSecurity(http)
                 .configureDefaultProperties()
-                .configureJwtFilter()
                 .configureSessionCreationPolicy()
                 .configureOpenMatchers()
                 .configureLockMatchers()
+                .configureJwtFilter()
                 .buildSecurityFilterChain();
-
-        //http.authorizeHttpRequests().requestMatchers("api/auth/login").permitAll();
-//        http = this.configureJwtFilter(http);
-
-//
-//
-//        return http.build();
     }
-
 }

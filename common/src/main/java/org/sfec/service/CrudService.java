@@ -1,9 +1,7 @@
 package org.sfec.service;
 
-import jakarta.validation.Valid;
 import org.sfec.entity.common.EntityStatus;
 import org.sfec.exception.EntityNotFoundException;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,24 +13,23 @@ import java.util.Optional;
  *
  * @param <T> the entity class parameter
  */
-@Validated
-public interface CrudService<T>{
+public interface CrudService<T> {
 
     List<T> findAll();
 
-    List<T> findAllByEntityStatus(@Valid EntityStatus entityStatus);
+    List<T> findAllByEntityStatus(EntityStatus entityStatus);
 
-    Optional<T> findById(@Valid Long id);
+    Optional<T> findById(Long id);
 
-    T findOne(@Valid Long id);
+    T findOne(Long id);
 
-    void hardDelete(@Valid Long id);
+    void hardDelete(Long id);
 
-    void softDelete(@Valid Long id);
+    void softDelete(Long id);
 
-    T create(@Valid T t);
+    T create(T t);
 
-    T update(@Valid T t);
+    T update(T t);
 
-    Boolean existById(@Valid Long id) throws EntityNotFoundException;
+    Boolean existById(Long id) throws EntityNotFoundException;
 }

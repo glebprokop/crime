@@ -1,6 +1,7 @@
 package org.sfec.util;
 
 import org.sfec.user.JwtUser;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -26,8 +27,9 @@ public interface SecurityService<T> {
      *
      * @param name username for searching in datasource
      * @return {@link JwtUser} object loaded from datasource and converted
+     * @throws AuthenticationException if user with username not found
      */
-    JwtUser findJwtUserByName(String name);
+    JwtUser findJwtUserByName(String name) throws AuthenticationException;
 
     /**
      * Method to convert the application user object of type <T> to the
@@ -44,7 +46,7 @@ public interface SecurityService<T> {
      * @param jwtUser the {@link JwtUser} object
      * @return T - application entity type for user
      */
-    T doApplicationUser(JwtUser jwtUser);
+    T doApplicationUser(JwtUser jwtUser) throws AuthenticationException;
 
     /**
      * Default method converted user authorities (like "ROLE_USER", "ROLE_ADMIN") into
@@ -53,10 +55,10 @@ public interface SecurityService<T> {
      * @param roles list of user roles
      * @return ready list of {@link GrantedAuthority} objects
      */
-    default List<GrantedAuthority> generateAuthorities(List<String> roles){
+    default List<GrantedAuthority> generateAuthorities(List<String> roles) {
         List<GrantedAuthority> authorities = roles.stream()
-                        .map(role -> new SimpleGrantedAuthority(role))
-                        .collect(Collectors.toList());
+                .map(role -> new SimpleGrantedAuthority(role))
+                .collect(Collectors.toList());
 
         return authorities;
     }

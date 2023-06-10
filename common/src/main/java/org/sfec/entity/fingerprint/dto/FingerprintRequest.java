@@ -8,9 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.sfec.entity.BaseRequestDto;
-import org.sfec.entity.crime.dto.CrimeRequest;
+import org.sfec.entity.crime.dto.CrimeRequestForEntity;
 import org.sfec.entity.expert.dto.ExpertRequest;
-import org.sfec.entity.image.dto.ImageRequest;
 
 import java.sql.Timestamp;
 
@@ -31,9 +30,9 @@ public class FingerprintRequest extends BaseRequestDto {
     @NotNull
     private Long serialNumber;
 
+    @NotNull
     private ExpertRequest expert;
 
-    private CrimeRequest crime;
-
-    private ImageRequest image;
+    @NotNull
+    private CrimeRequestForEntity crime;
 }

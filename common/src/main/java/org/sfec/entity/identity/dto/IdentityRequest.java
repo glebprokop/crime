@@ -31,5 +31,5 @@ public class IdentityRequest extends BaseRequestDto {
 
     private String comment;
 
-    private FingerprintRequest fingerprintRequest;
+    private FingerprintRequest fingerprint;
 }

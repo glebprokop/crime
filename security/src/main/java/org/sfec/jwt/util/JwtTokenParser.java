@@ -4,11 +4,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.sfec.properties.TokenProperties;
 import org.springframework.stereotype.Component;
+
 import java.util.Date;
 
 /**
  * Util class used for parse tokens
- *
  */
 @Component
 public class JwtTokenParser {
@@ -41,8 +41,6 @@ public class JwtTokenParser {
     }
 
     /**
-     *
-     *
      * @param token
      * @return
      */

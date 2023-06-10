@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -52,6 +51,9 @@ public class Address extends BaseEntity {
     @Column(name = "locality")
     private String locality;
 
+    @Column(name = "street")
+    private String street;
+
     @Column(name = "building")
     private String building;
 
@@ -67,7 +69,7 @@ public class Address extends BaseEntity {
     @Column(name = "police_department")
     private String policeDepartment;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "crime_id",
             referencedColumnName = "crime_id")
     private Crime crime;

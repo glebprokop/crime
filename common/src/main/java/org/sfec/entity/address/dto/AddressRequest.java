@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.sfec.entity.BaseRequestDto;
+import org.sfec.entity.crime.dto.CrimeRequestForEntity;
 
 @Data
 @SuperBuilder
@@ -30,6 +31,8 @@ public class AddressRequest extends BaseRequestDto {
     @Size(min = 1, max = 100)
     private String locality;
 
+    private String street;
+
     private String building;
 
     private String corps;
@@ -41,4 +44,7 @@ public class AddressRequest extends BaseRequestDto {
     @NotNull
     @Size(min = 1, max = 100)
     private String policeDepartment;
+
+    @NotNull
+    private CrimeRequestForEntity crime;
 }

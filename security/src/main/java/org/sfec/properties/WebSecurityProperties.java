@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Component
 @ConfigurationProperties(prefix = "security.web")
@@ -20,7 +20,7 @@ import java.util.Map;
 public class WebSecurityProperties {
 
     @NotNull
-    private Map<String, String[]> privateMatchers = new HashMap<>();
+    private HashMap<String, List<String>> privateMatchers = new HashMap<>();
 
     private String[] publicMatchers = {};
 

@@ -12,7 +12,7 @@ public interface UUIDGenerator {
      *
      * @return string contains the uniq UUID
      */
-    default String generateUUID(){
+    default String generateUUID() {
         return UUID.randomUUID().toString();
     }
 }

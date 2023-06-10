@@ -1,14 +1,16 @@
 package org.sfec.rest;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.validation.Valid;
+import org.sfec.exception.BadCredentialsException;
 import org.sfec.jwt.JwtTokenProvider;
 import org.sfec.user.JwtUser;
 import org.sfec.util.SecurityService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Validated
 @RequestMapping("/api/auth")
 public class DefaultAuthenticationController {
 
@@ -37,29 +40,24 @@ public class DefaultAuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody DefaultRequestDto requestDto) {
+        Map<Object, Object> response = new HashMap<>();
+
         try {
             String username = requestDto.getUsername();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,
+                    requestDto.getPassword()));
 
             JwtUser user = service.findJwtUserByName(username);
-            if (user == null) {
-                throw new UsernameNotFoundException("User with username: " + username + " not found");
-            }
-
             String token = jwtTokenProvider.generateToken(user);
-
-            Map<Object, Object> response = new HashMap<>();
             response.put("username", username);
             response.put("token", token);
 
             return ResponseEntity.ok(response);
-        } catch (Exception e){
-            System.out.println("Bad credentials");
-            e.printStackTrace();
-//            throw new BadCredentialsException("Bad credentials");
-        }
 
-        Map<Object, Object> response2 = new HashMap<>();
-        return new ResponseEntity(response2, HttpStatus.BAD_REQUEST);
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException(e.getMessage());
+        } catch (JwtException e) {
+            throw new BadCredentialsException("JWT token invalid");
+        }
     }
 }

@@ -1,6 +1,6 @@
 package org.sfec.controller.image;
 
-import org.sfec.controller.CrudController;
+import jakarta.validation.Valid;
 import org.sfec.entity.common.EntityStatus;
 import org.sfec.entity.image.dto.ImageRequest;
 import org.sfec.service.image.ImageService;
@@ -15,21 +15,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/images")
-public class ImageController implements CrudController<ImageRequest> {
+public class ImageController extends AbstractImageController {
 
     private final ImageService imageService;
 
     public ImageController(ImageService imageService) {
+        super(imageService);
         this.imageService = imageService;
     }
-    
+
     @GetMapping()
     public ResponseEntity<List<ImageRequest>> findAllByEntityStatus(
-            @RequestParam(name = "status") EntityStatus entityStatus) {
+            @Valid @RequestParam(name = "status") EntityStatus entityStatus) {
         List<ImageRequest> objects = imageService.findAllByEntityStatus(entityStatus);
 
         return new ResponseEntity<>(objects, HttpStatus.OK);
@@ -37,7 +40,7 @@ public class ImageController implements CrudController<ImageRequest> {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<ImageRequest> findOne(@PathVariable Long id) {
+    public ResponseEntity<ImageRequest> findOne(@Valid @PathVariable Long id) {
         ImageRequest object = imageService.findOne(id);
 
         return new ResponseEntity<>(object, HttpStatus.OK);
@@ -45,28 +48,28 @@ public class ImageController implements CrudController<ImageRequest> {
 
     @Override
     @DeleteMapping("/{id}")
-    public void softDelete(@PathVariable Long id) {
+    public void softDelete(@Valid @PathVariable Long id) {
         imageService.softDelete(id);
     }
 
     @Override
     @DeleteMapping("/erase/{id}")
-    public void hardDelete(@PathVariable Long id) {
+    public void hardDelete(@Valid @PathVariable Long id) {
         imageService.hardDelete(id);
     }
 
     @Override
     @PostMapping()
-    public ResponseEntity<ImageRequest> create(@RequestBody ImageRequest imageRequest) {
-        ImageRequest created = imageService.create(imageRequest);
+    public ResponseEntity<ImageRequest> create(@Valid @RequestBody ImageRequest imageRequest) throws IOException {
+        ImageRequest created = imageService.createWithUuid(imageRequest);
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @Override
     @PutMapping()
-    public ResponseEntity<ImageRequest> update(@RequestBody ImageRequest imageRequest) {
-        ImageRequest updated = imageService.update(imageRequest);
+    public ResponseEntity<ImageRequest> update(@Valid @RequestBody ImageRequest imageRequest) {
+        ImageRequest updated = imageService.updateWithUuid(imageRequest);
 
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }

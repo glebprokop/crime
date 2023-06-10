@@ -7,6 +7,7 @@ import org.sfec.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository class used for searching info about {@link Expert} objects in
@@ -22,7 +23,7 @@ public interface ExpertRepository extends CrudRepository<Expert> {
      * @param username name of user, hah so unexpectedly
      * @return {@link Expert} object founded in data source
      */
-    Expert findByUsername(String username);
+    Optional<Expert> findByUsername(String username);
 
     /**
      * Method for searching {@link Expert} list for their {@link org.sfec.entity.role.ExpertRole}

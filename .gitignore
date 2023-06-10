@@ -11,6 +11,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# maven generatedfiles
+*.mvnw
+
 # Package Files #
 *.jar
 *.war
@@ -44,6 +47,7 @@ target/
 *.iws
 *.iml
 *.ipr
+.mvn
 
 ### NetBeans ###
 /nbproject/private/

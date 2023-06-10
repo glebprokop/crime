@@ -3,6 +3,7 @@ package org.sfec.configuration;
 import org.sfec.jwt.JwtTokenFilter;
 import org.sfec.properties.WebSecurityProperties;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -10,9 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Class contains methods to configure parameters of {@link HttpSecurity} object during forming
@@ -21,14 +21,12 @@ import java.util.Set;
 @Component
 public class WebSecurityConfigurator {
 
+    private final WebSecurityProperties properties;
+    private final JwtTokenFilter jwtTokenFilter;
     /**
      * Configurable object, not autowired (use setHttpSecurity to set object in this class for configure)
      */
     private HttpSecurity httpSecurity;
-
-    private final WebSecurityProperties properties;
-
-    private final JwtTokenFilter jwtTokenFilter;
 
     public WebSecurityConfigurator(WebSecurityProperties properties,
                                    JwtTokenFilter jwtTokenFilter) {
@@ -54,21 +52,37 @@ public class WebSecurityConfigurator {
      * @throws Exception throwing by {@link HttpSecurity} class
      */
     public WebSecurityConfigurator configureLockMatchers() throws Exception {
-        String page;
+        HashMap<String, List<String>> lockMatchers = reverseLockMatchers(properties.getPrivateMatchers());
 
-        for (String p : properties.getPrivateMatchers().keySet()) {
-            page = p;
-            String[] roles = properties.getPrivateMatchers().get(page);
+        AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry =
+                this.httpSecurity.authorizeHttpRequests();
 
-            this.httpSecurity.authorizeHttpRequests().
-                    requestMatchers(page)
-                    .hasAnyRole(roles);
+        for (String page : lockMatchers.keySet()) {
+            String[] roles = lockMatchers.get(page).toArray(new String[0]);
+            registry.requestMatchers(page).hasAnyRole(roles);
         }
-        this.httpSecurity.authorizeHttpRequests()
-             .anyRequest()
-             .authenticated();
+        registry.anyRequest().authenticated();
 
         return this;
+    }
+
+    public HashMap<String, List<String>> reverseLockMatchers(HashMap<String, List<String>> lockMatchers) {
+        HashSet<String> pages = new HashSet<>();
+        lockMatchers.values().forEach(pages::addAll);
+
+        HashMap<String, List<String>> convertedLockMatchers = new HashMap<>();
+
+        for (String page : pages) {
+            convertedLockMatchers.put(page, new ArrayList<>());
+
+            for (String role : lockMatchers.keySet()) {
+                if (lockMatchers.get(role).contains(page)) {
+                    convertedLockMatchers.get(page).add(role);
+                }
+            }
+        }
+
+        return convertedLockMatchers;
     }
 
     /**
@@ -79,14 +93,10 @@ public class WebSecurityConfigurator {
      * @throws Exception throwing by {@link HttpSecurity} class
      */
     public WebSecurityConfigurator configureOpenMatchers() throws Exception {
-        String page;
+        AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry =
+                this.httpSecurity.authorizeHttpRequests();
 
-        for (String s : properties.getPublicMatchers()) {
-            page = s;
-
-            this.httpSecurity.authorizeHttpRequests().
-                    requestMatchers(page).permitAll();
-            }
+        registry.requestMatchers(properties.getPublicMatchers()).permitAll();
 
         return this;
     }
@@ -134,4 +144,11 @@ public class WebSecurityConfigurator {
 
         return this;
     }
+//
+//    public WebSecurityConfigurator configureAuthenticationProvider(AuthenticationManager authenticationManager){
+//        this.httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
+//                .parentAuthenticationManager(authenticationManager);
+//
+//        return this;
+//    }
 }

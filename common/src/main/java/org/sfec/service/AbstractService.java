@@ -1,6 +1,6 @@
 package org.sfec.service;
 
-import jakarta.validation.Valid;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.sfec.entity.BaseEntity;
 import org.sfec.entity.BaseRequestDto;
@@ -9,7 +9,8 @@ import org.sfec.exception.EntityNotFoundException;
 import org.sfec.mapper.CommonMapper;
 import org.sfec.repository.CrudRepository;
 import org.sfec.util.TimeManager;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.cache.annotation.Cacheable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -23,15 +24,15 @@ import java.util.Optional;
  *
  * @param <E> entity object based on {@link BaseEntity}
  * @param <T> data transfer object based on {@link BaseRequestDto}. According to my contract,
- *           all service methods need to return such objects
+ *            all service methods need to return such objects
  * @param <R> JPA based repository class, creating for every entity (see {@link CrudRepository})
  */
-@Validated
 @Data
+@Cacheable("entities")
 public abstract class AbstractService<E extends BaseEntity,
         T extends BaseRequestDto,
         R extends CrudRepository<E>>
-        implements CrudService<T>  {
+        implements CrudService<T> {
 
     private final CommonMapper<E, T> mapper;
 
@@ -46,6 +47,7 @@ public abstract class AbstractService<E extends BaseEntity,
     }
 
     @Override
+    @Transactional
     public List<T> findAll() {
         List<E> eList = repository.findAll();
 
@@ -53,14 +55,16 @@ public abstract class AbstractService<E extends BaseEntity,
     }
 
     @Override
-    public List<T> findAllByEntityStatus(@Valid EntityStatus entityStatus){
+    @Transactional
+    public List<T> findAllByEntityStatus(EntityStatus entityStatus) {
         List<E> eList = repository.findAllByEntityStatus(entityStatus);
 
         return mapper.toTransfer(eList);
     }
 
     @Override
-    public Optional<T> findById(@Valid Long id){
+    @Transactional
+    public Optional<T> findById(Long id) {
         existById(id);
         Optional<E> optionalE = repository.findById(id);
         T t = mapper.toTransfer(optionalE.get());
@@ -69,19 +73,22 @@ public abstract class AbstractService<E extends BaseEntity,
     }
 
     @Override
-    public T findOne(@Valid Long id){
+    @Transactional
+    public T findOne(Long id) {
         return this.findById(id).get();
     }
 
     @Override
-    public void hardDelete(@Valid Long id){
+    @Transactional
+    public void hardDelete(Long id) {
         existById(id);
-
         repository.deleteById(id);
+        repository.flush();
     }
 
     @Override
-    public void softDelete(@Valid Long id){
+    @Transactional
+    public void softDelete(Long id) {
         existById(id);
 
         T t = this.findOne(id);
@@ -90,7 +97,8 @@ public abstract class AbstractService<E extends BaseEntity,
     }
 
     @Override
-    public T create(@Valid T t){
+    @Transactional
+    public T create(T t) {
         E e = mapper.toEntity(t);
         e.setChanged(timeManager.currentTime());
         e.setCreated(timeManager.currentTime());
@@ -101,7 +109,8 @@ public abstract class AbstractService<E extends BaseEntity,
     }
 
     @Override
-    public T update(@Valid T t){
+    @Transactional
+    public T update(T t) {
         existById(t.getId());
 
         E e = mapper.toEntity(t);
@@ -112,8 +121,9 @@ public abstract class AbstractService<E extends BaseEntity,
     }
 
     @Override
-    public Boolean existById(@Valid Long id) throws EntityNotFoundException {
-        if (!repository.existsById(id)){
+    @Transactional
+    public Boolean existById(Long id) throws EntityNotFoundException {
+        if (!repository.existsById(id)) {
             throw new EntityNotFoundException("id", id);
         }
 

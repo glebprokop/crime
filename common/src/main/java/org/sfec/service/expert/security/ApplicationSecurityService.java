@@ -6,10 +6,13 @@ import org.sfec.repository.expert.ExpertRepository;
 import org.sfec.user.JwtUser;
 import org.sfec.util.SecurityService;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class add functionality for the correct security work, used for connection to
@@ -27,10 +30,11 @@ public class ApplicationSecurityService implements SecurityService<Expert> {
     }
 
     @Override
-    public JwtUser findJwtUserByName(String name) {
-        Expert expert = expertRepository.findByUsername(name);
+    public JwtUser findJwtUserByName(String name) throws AuthenticationException {
+        Optional<Expert> expert = expertRepository.findByUsername(name);
 
-        return this.doJwtUser(expert);
+        return this.doJwtUser(expert.orElseThrow(() -> new UsernameNotFoundException("User not found with username " +
+                name)));
     }
 
     @Override
@@ -49,9 +53,10 @@ public class ApplicationSecurityService implements SecurityService<Expert> {
     }
 
     @Override
-    public Expert doApplicationUser(JwtUser jwtUser) {
-        Expert expert = expertRepository.findByUsername(jwtUser.getUsername());
+    public Expert doApplicationUser(JwtUser jwtUser) throws AuthenticationException {
+        Optional<Expert> expert = expertRepository.findByUsername(jwtUser.getUsername());
 
-        return expert;
+        return expert.orElseThrow(() -> new UsernameNotFoundException("User not found with username " +
+                jwtUser.getUsername()));
     }
 }

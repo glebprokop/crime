@@ -12,7 +12,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ import org.sfec.entity.role.ExpertRole;
 
 /**
  * Entity class described the expert - logged user and main worker
- *
  */
 @Data
 @SuperBuilder

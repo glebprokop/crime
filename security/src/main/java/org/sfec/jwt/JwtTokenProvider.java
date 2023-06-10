@@ -1,12 +1,12 @@
 package org.sfec.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import org.sfec.jwt.util.JwtTokenParser;
 import org.sfec.properties.TokenProperties;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,11 +24,9 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private TokenProperties tokenProperties;
-
-    private UserDetailsService userDetailsService;
-
     private final JwtTokenParser jwtTokenParser;
+    private TokenProperties tokenProperties;
+    private UserDetailsService userDetailsService;
 
     public JwtTokenProvider(TokenProperties tokenProperties,
                             UserDetailsService userDetailsService,
@@ -39,9 +37,9 @@ public class JwtTokenProvider {
     }
 
     /**
-     * Method for generating
+     * Method for generating token according user details info
      *
-     * @param userDetails
+     * @param userDetails object contains info about user
      * @return
      */
     public String generateToken(UserDetails userDetails) {
@@ -63,9 +61,9 @@ public class JwtTokenProvider {
      *
      * @param request {@link HttpServletRequest} object - mirror of http in Java
      * @return extracted token
-     * @throws BadCredentialsException if token is null
+     * @throws JwtException if token is null
      */
-    public String resolveToken(HttpServletRequest request) throws BadCredentialsException {
+    public String resolveToken(HttpServletRequest request) throws JwtException {
         String token = request.getHeader(tokenProperties.getRequestHeaderAuthorization());
 
         return token;

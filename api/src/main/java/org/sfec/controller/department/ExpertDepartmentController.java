@@ -1,5 +1,6 @@
 package org.sfec.controller.department;
 
+import jakarta.validation.Valid;
 import org.sfec.controller.CrudController;
 import org.sfec.entity.common.EntityStatus;
 import org.sfec.entity.department.dto.ExpertDepartmentRequest;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
 @RestController
@@ -30,7 +32,7 @@ public class ExpertDepartmentController implements CrudController<ExpertDepartme
     @Override
     @GetMapping()
     public ResponseEntity<List<ExpertDepartmentRequest>> findAllByEntityStatus(
-            @RequestParam(name = "status") EntityStatus entityStatus) {
+            @Valid @RequestParam(name = "status") EntityStatus entityStatus) {
         List<ExpertDepartmentRequest> objects = expertDepartmentService.findAllByEntityStatus(entityStatus);
 
         return new ResponseEntity<>(objects, HttpStatus.OK);
@@ -38,7 +40,7 @@ public class ExpertDepartmentController implements CrudController<ExpertDepartme
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<ExpertDepartmentRequest> findOne(@PathVariable Long id) {
+    public ResponseEntity<ExpertDepartmentRequest> findOne(@Valid @PathVariable Long id) {
         ExpertDepartmentRequest object = expertDepartmentService.findOne(id);
 
         return new ResponseEntity<>(object, HttpStatus.OK);
@@ -46,19 +48,19 @@ public class ExpertDepartmentController implements CrudController<ExpertDepartme
 
     @Override
     @DeleteMapping("/{id}")
-    public void softDelete(@PathVariable Long id) {
+    public void softDelete(@Valid @PathVariable Long id) {
         expertDepartmentService.softDelete(id);
     }
 
     @Override
     @DeleteMapping("/erase/{id}")
-    public void hardDelete(@PathVariable Long id) {
+    public void hardDelete(@Valid @PathVariable Long id) {
         expertDepartmentService.hardDelete(id);
     }
 
     @Override
     @PostMapping()
-    public ResponseEntity<ExpertDepartmentRequest> create(@RequestBody ExpertDepartmentRequest ExpertDepartmentRequest) {
+    public ResponseEntity<ExpertDepartmentRequest> create(@Valid @RequestBody ExpertDepartmentRequest ExpertDepartmentRequest) {
         ExpertDepartmentRequest created = expertDepartmentService.create(ExpertDepartmentRequest);
 
         return new ResponseEntity<>(created, HttpStatus.CREATED);
@@ -66,9 +68,9 @@ public class ExpertDepartmentController implements CrudController<ExpertDepartme
 
     @Override
     @PutMapping()
-    public ResponseEntity<ExpertDepartmentRequest> update(@RequestBody ExpertDepartmentRequest ExpertDepartmentRequest) {
+    public ResponseEntity<ExpertDepartmentRequest> update(@Valid @RequestBody ExpertDepartmentRequest ExpertDepartmentRequest) {
         ExpertDepartmentRequest updated = expertDepartmentService.update(ExpertDepartmentRequest);
 
         return new ResponseEntity<>(updated, HttpStatus.OK);
-    }   
+    }
 }

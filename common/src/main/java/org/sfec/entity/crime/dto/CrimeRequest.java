@@ -8,6 +8,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.sfec.entity.BaseRequestDto;
 import org.sfec.entity.address.dto.AddressRequest;
+import org.sfec.entity.fingerprint.dto.FingerprintRequest;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -19,8 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class CrimeRequest extends BaseRequestDto {
-
-    private Long crimeId;
 
     private Long policeRegNumber;
 
@@ -35,4 +34,6 @@ public class CrimeRequest extends BaseRequestDto {
     private String crimeStatus;
 
     private List<AddressRequest> addresses;
+
+    private List<FingerprintRequest> fingerprints;
 }

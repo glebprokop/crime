@@ -40,9 +40,20 @@ public enum ExceptionCodes {
     HTTP_CLIENT_ERROR(40),
 
     /**
+     * Error status for incorrect credentials (login or password)
+     */
+    BAD_CREDENTIALS_ERROR(41),
+
+    /**
+     * Error status for incorrect token (unsigned or expired)
+     */
+    BAD_TOKEN_ERROR(411),
+
+
+    /**
      * Error status for incorrect type of request param data
      */
-    HTTP_BAD_PARAM_TYPE_ERROR(41);
+    HTTP_BAD_PARAM_TYPE_ERROR(60);
 
     /**
      * Special exception code used for identifying of exception type. See

@@ -8,5 +8,5 @@ import org.sfec.entity.image.dto.ImageRequest;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE,
         componentModel = MappingConstants.ComponentModel.SPRING)
-public interface ImageMapper extends CommonMapper<Image, ImageRequest>{
+public interface ImageMapper extends CommonMapper<Image, ImageRequest> {
 }

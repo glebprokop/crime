@@ -1,7 +1,6 @@
 package org.sfec.entity.department;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -50,8 +49,8 @@ public class ExpertDepartment extends BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "expertDepartment",
-            cascade = CascadeType.PERSIST,
-            fetch = FetchType.EAGER)
+            fetch = FetchType.EAGER,
+            orphanRemoval = false)
     @JsonBackReference
     private Set<Expert> experts;
 }

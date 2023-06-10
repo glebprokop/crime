@@ -8,5 +8,5 @@ import org.sfec.entity.fingerprint.dto.FingerprintRequest;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE,
         componentModel = MappingConstants.ComponentModel.SPRING)
-public interface FingerprintMapper extends CommonMapper<Fingerprint, FingerprintRequest>{
+public interface FingerprintMapper extends CommonMapper<Fingerprint, FingerprintRequest> {
 }
